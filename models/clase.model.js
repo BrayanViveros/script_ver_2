@@ -36,6 +36,6 @@ const claseSchema = new mongoose.Schema({
     }
 });
 
-const Clase = mongoose.model('Clase', claseSchema);
+const Clase = mongoose.model('clase', claseSchema);
 
 export default Clase;
