@@ -3,6 +3,8 @@ import cors from "cors";
 import morgan from "morgan";
 import  miruta  from "./routes/routes.User.js";
 import routerRol from "./routes/routes.Rol.js";
+import rutaclase from "./routes/routes.Clase.js";
+import rutaclaus from "./routes/routes.Claus.js";
 
 const app = express();
 
@@ -18,7 +20,7 @@ const app = express();
 //   res.send('registraste un usuario!');
 // });
 
-app.get('/apdzs', miruta, routerRol)
+app.get('/apdzs', miruta, routerRol, rutaclase, rutaclaus )
 
 // settings
 app.set("port", process.env.PORT || 4000);
@@ -29,7 +31,7 @@ app.use(morgan("dev"));
 app.use(express.json());
 
 
-app.use('/usuarios',miruta, routerRol);
+app.use('/usuarios',miruta, routerRol, rutaclase, rutaclaus);
 
 app.use((req, res, next) => {
     const error = new Error("Not Found");
