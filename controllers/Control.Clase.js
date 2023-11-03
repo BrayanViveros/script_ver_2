@@ -22,7 +22,7 @@ export const getClase = async (req, res) => {
 
 export const createClase = async (req, res) => {
   try {
-    console.log(req.body); // Verifica los datos antes de la inserción
+    console.log(req.body); 
     const nuevaClase = new Clase(req.body);
     await nuevaClase.save();
 
