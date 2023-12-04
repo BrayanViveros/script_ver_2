@@ -1,11 +1,11 @@
-import mongoose, { Schema, model } from 'mongoose';
-import bcrypt from 'bcrypt';
+import mongoose from 'mongoose';
 
+//Aqui tengo mi modelo de Usuarios 
 const usuarioSchema = new mongoose.Schema({
 
-   N_Identificacion: {
+    N_Identificacion: {
      type: Number,
-     required: true,
+     required: false,
      // unique: true,
 
     },
@@ -13,48 +13,48 @@ const usuarioSchema = new mongoose.Schema({
          type: String,
          required: true,
     },
-      Estado_Usuario: {
-        type: String,
-        required: true,
-     },
+    //   Estado_Usuario: {
+    //     type: String,
+    //     required: false,
+    //  },
       Telefono: {
         type: Number,
-        required: true,
+        required: false,
      },
       Fec_Nacimiento:{
         type: String,
-        require: true,
+        required: false,
      },
       Ciudad:{
         type: String,
         required: false,
      },
-      Correo: {
+      email: {
         type: String,
-        required:false,
-        unique: false,
+        required:true,
+        unique: true,
      },
-      Contraseña:{
+      password:{
         type: String,
         required: true,
      },
      Hoja_Vida: {
       type: String,
       required: false,
-     },
-     Id_User :{
-      type: Number,
-      required: false,
-     },
+     }
     //  rol_id: {
     //   type: Schema.Types.ObjectId,
     //   ref: 'Roles',  // Referencia a la colección Roles
     //   required: false,}
-  });
+  },
+  {
+    timestamps: true,
+  }
+  );
    
-usuarioSchema.methods.encryptContrasena = async (contrasena) => {
-    return bcrypt.hash(contrasena, 10);
-  };
+// usuarioSchema.methods.encryptContrasena = async (contrasena) => {
+//     return bcrypt.hash(contrasena, 10);
+//   };
 
 
 const Usuarios = mongoose.model('Usuarios', usuarioSchema);

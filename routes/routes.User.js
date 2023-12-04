@@ -1,12 +1,18 @@
-import express from 'express'
-import { getAllApdz, getApdz, createApdz, updateApdz, deleteApdz  } from '../controllers/controlUser.js'
+import { Router } from "express";
+import {
+  login,
+  logout,
+  register,
+  verifyToken,
+} from "../controllers/auth.controller.js";
+import { validateSchema } from "../middleware/VerificarToken.js";
+import { loginSchema, registerSchema } from "../schemas/auth.schema.js";
 
-const routerUser = express.Router()
+const router = Router();
 
-routerUser.get('/', getAllApdz)
-routerUser.get('/:id', getApdz)
-routerUser.post('/', createApdz)
-routerUser.put('/:id', updateApdz)
-routerUser.delete('/:id', deleteApdz)
+router.post("/register", validateSchema(registerSchema), register);
+router.post("/login", validateSchema(loginSchema), login);
+router.get("/verify", verifyToken);
+router.post("/logout", verifyToken, logout);
 
-export default routerUser
+export default router;

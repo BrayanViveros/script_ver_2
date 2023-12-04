@@ -1,16 +1,23 @@
-import User from "../models/Usuario.model.js";
+import jwt from "jsonwebtoken";
+import { TOKEN_SECRET } from "../config.js";
 
-export const verificar = async (req, res, next) => {
-  const { Correo, contrasena } = req.body;
-  if (!Correo || !contrasena) {
-    return res.status(400).json("Ingrese todos los campos!");
+export const auth = (req, res, next) => {
+  try {
+    const { token } = req.cookies;
+
+    if (!token)
+      return res
+        .status(401)
+        .json({ message: "No token, authorization denied" });
+
+    jwt.verify(token, TOKEN_SECRET, (error, user) => {
+      if (error) {
+        return res.status(401).json({ message: "Token is not valid" });
+      }
+      req.user = user;
+      next();
+    });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
   }
-
-  // Buscar usuario por el campo Correo (con mayúscula)
-  const userCorreo = await User.findOne({ Correo: Correo });
-  if (userCorreo) {
-    return res.status(400).json("Correo ya existente!");
-  }
-
-  next();
 };
