@@ -2,21 +2,21 @@ import { Router } from "express";
 import {
   createTask,
   deleteTask,
-  getTask,
   getTasks,
+  getAllTask,
   updateTask,
 } from "../controllers/tasks.controllers.js";
-import { auth } from "../middlewares/auth.middleware.js";
-import { validateSchema } from "../middlewares/validator.middleware.js";
-import { createTaskSchema } from "../schemas/task.schema.js";
+import { auth } from "../middleware/AuthUser.js";
+import { validateSchema } from "../middleware/VerificarToken.js";
+import { createTaskSchema } from "../schemas/task-schema.js";
 
 const router = Router();
 
-router.get("/tasks", auth, getTasks);
+router.get("/tasks", auth, getAllTask);
 
 router.post("/tasks", auth, validateSchema(createTaskSchema), createTask);
 
-router.get("/tasks/:id", auth, getTask);
+router.get("/tasks/:id", auth, getTasks);
 
 router.put("/tasks/:id", auth, updateTask);
 

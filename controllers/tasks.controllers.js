@@ -1,62 +1,54 @@
 import Task from "../models/task.model.js";
 
+export const getAllTask = async (req, res) => {
+  try {
+    const Tasks = await Task.find();
+    res.json(Tasks);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 export const getTasks = async (req, res) => {
   try {
-    const tasks = await Task.find({ user : req.user.id }).populate("user");
-    res.json(tasks);
+    const Task = await Task.findOne({ _id: req.params.id });
+    res.json(Task);
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
 
 export const createTask = async (req, res) => {
   try {
-    const { title, description, date } = req.body;
-    const newTask = new Task({
-      title,
-      description,
-      date,
-      user: req.user.id,
+    console.log(req.body); 
+    const nuevaTask = new Task(req.body);
+    await nuevaTask.save();
+
+    const token = jwt.sign({ id: nuevaTask._id }, process.env.JWT_TOKEN, {
+      expiresIn: "1h", 
     });
-    await newTask.save();
-    res.json(newTask);
-  } catch (error) {
-    return res.status(500).json({ message: error.message });
-  }
-};
 
-export const deleteTask = async (req, res) => {
-  try {
-    const deletedTask = await Task.findByIdAndDelete(req.params.id);
-    if (!deletedTask)
-      return res.status(404).json({ message: "Task not found" });
-
-    return res.sendStatus(204);
+    res.json({ message: "¡Registro creado correctamente!", token });
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    console.error(error); 
+    res.status(500).json({ message: error.message });
   }
 };
 
 export const updateTask = async (req, res) => {
   try {
-    const { title, description, date } = req.body;
-    const taskUpdated = await Task.findOneAndUpdate(
-      { _id: req.params.id },
-      { title, description, date },
-      { new: true }
-    );
-    return res.json(taskUpdated);
+    await Task.findByIdAndUpdate(req.params.id, req.body);
+    res.json({ message: "¡Registro actualizado correctamente!" });
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
 
-export const getTask = async (req, res) => {
+export const deleteTask = async (req, res) => {
   try {
-    const task = await Task.findById(req.params.id);
-    if (!task) return res.status(404).json({ message: "Task not found" });
-    return res.json(task);
+    await Task.findByIdAndDelete(req.params.id);
+    res.json({ message: "¡Registro eliminado correctamente!" });
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    res.status(500).json({ message: error.message });
   }
-};
+}

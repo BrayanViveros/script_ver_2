@@ -4,6 +4,15 @@ import bcrypt from "bcryptjs";
 import { TOKEN_SECRET } from "../config.js";
 import { createAccessToken } from "../libs/jwt.js";
 
+// export const getAllTask = async (req, res) => {
+//   try {
+//     const users = await User.find();
+//     res.json(users);
+//   } catch (error) {
+//     res.status(500).json({ message: error.message });
+//   }
+// };
+
 export const register = async (req, res) => {
   try {
     const {
@@ -13,13 +22,15 @@ export const register = async (req, res) => {
       Telefono,
       N_Identificacion,
       Fec_Nacimiento,
+      Ciudad,
+
     } = req.body;
 
     const userFound = await User.findOne({ email });
 
     if (userFound)
       return res.status(400).json({
-        message: ["The email is already in use"],
+        message: "The email is already in use",
       });
 
     // hash de la contraseña
@@ -33,6 +44,7 @@ export const register = async (req, res) => {
       Telefono,
       N_Identificacion,
       Fec_Nacimiento,
+      Ciudad,
     });
 
     // guardar al usuario en la base de datos
@@ -56,6 +68,7 @@ export const register = async (req, res) => {
       Telefono: userSaved.Telefono,
       N_Identificacion: userSaved.N_Identificacion,
       Fec_Nacimiento: userSaved.Fec_Nacimiento,
+      Ciudad: userSaved.Ciudad,
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -97,6 +110,7 @@ export const login = async (req, res) => {
       Telefono: userFound.Telefono,
       N_Identificacion: userFound.N_Identificacion,
       Fec_Nacimiento: userFound.Fec_Nacimiento,
+      Ciudad: userFound.Ciudad,
     });
   } catch (error) {
     return res.status(500).json({ message: error.message });
@@ -121,6 +135,7 @@ export const verifyToken = async (req, res) => {
       Telefono: userFound.Telefono,
       N_Identificacion: userFound.N_Identificacion,
       Fec_Nacimiento: userFound.Fec_Nacimiento,
+      Ciudad: userFound.Ciudad,
     });
   });
 };
